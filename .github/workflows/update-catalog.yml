@@ -1,0 +1,75 @@
+name: Update catalog
+
+# Rebuilds catalog.json from every published release and commits it to the
+# `catalog` branch, which Narration Studio reads from
+# https://raw.githubusercontent.com/<owner>/<repo>/catalog/catalog.json
+#
+# Publishing, editing, unpublishing or deleting a release is all it takes.
+# Run it by hand from the Actions tab (Run workflow) to regenerate at any time.
+#
+# Releases created by another workflow with GITHUB_TOKEN do NOT trigger this
+
+on:
+  release:
+    types: [published, unpublished, edited, deleted]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-catalog
+  cancel-in-progress: false
+
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate catalog.json
+        id: generate
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/generate_catalog.py --repository "$GITHUB_REPOSITORY" --output "$RUNNER_TEMP/catalog.json"
+
+      - name: Commit to the catalog branch
+        shell: bash
+        env:
+          TRIGGER: ${{ github.event_name }} ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          if [ ! -f "$RUNNER_TEMP/catalog.json" ]; then
+            echo "No catalog generated (listing releases failed); the published catalog is left as it is."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin catalog > /dev/null; then
+            git fetch origin catalog
+            git checkout -B catalog origin/catalog
+          else
+            git checkout --orphan catalog
+            git rm -rf --quiet .
+          fi
+          cp "$RUNNER_TEMP/catalog.json" catalog.json
+          git add catalog.json
+          if git diff --cached --quiet; then
+            echo "catalog.json unchanged"
+          else
+            git commit -m "Update catalog ($TRIGGER)"
+            git push origin catalog
+          fi
+
+      - name: Fail when releases had problems
+        if: steps.generate.outcome == 'failure'
+        run: |
+          echo "Some releases were left out of the catalog — see the errors above."
+          exit 1

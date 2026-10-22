@@ -1,0 +1,140 @@
+name: Build release
+
+# Builds one engine's packs on GitHub's runners and attaches them to a draft release
+# <id>-v<version>, with the version from <id>/manifest.template.json. Test the draft's
+# files with Import in Narration Studio, write the release notes and publish it:
+# publishing creates the tag and runs update-catalog.yml.
+#
+# <id>/release.json lists the builds: the wrapper script to run and the runner to run it
+# on. Python packs install native wheels, so they're built on the platform they're for.
+
+on:
+  workflow_dispatch:
+    inputs:
+      engine:
+        description: Engine
+        type: choice
+        options:
+          - kokoro
+          - opensapi4
+          - openvoice
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ inputs.engine }}
+  cancel-in-progress: false
+
+jobs:
+  draft:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+      builds: ${{ steps.release.outputs.builds }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create or reset the draft release
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE: ${{ inputs.engine }}
+        run: |
+          set -euo pipefail
+          version=$(jq -r .version "$ENGINE/manifest.template.json")
+          name=$(jq -r .name "$ENGINE/manifest.template.json")
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::$ENGINE/manifest.template.json has version '$version'; expected <major>.<minor>.<patch>"
+            exit 1
+          fi
+          tag="$ENGINE-v$version"
+          if git ls-remote --exit-code --tags origin "refs/tags/$tag" > /dev/null; then
+            echo "::error::$tag is already released. Bump the version in $ENGINE/manifest.template.json."
+            exit 1
+          fi
+
+          draft=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases" \
+            --jq ".[] | select(.draft and .tag_name == \"$tag\") | .id" | head -n 1)
+          if [ -n "$draft" ]; then
+            echo "Rebuilding the draft $tag: removing its old files"
+            for asset in $(gh api --paginate "repos/$GITHUB_REPOSITORY/releases/$draft/assets" --jq '.[].id'); do
+              gh api -X DELETE "repos/$GITHUB_REPOSITORY/releases/assets/$asset"
+            done
+            gh api -X PATCH "repos/$GITHUB_REPOSITORY/releases/$draft" -f target_commitish="$GITHUB_SHA" > /dev/null
+          else
+            gh release create "$tag" --draft --target "$GITHUB_SHA" --title "$name $version" --notes ""
+          fi
+
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "builds=$(jq -c .builds "$ENGINE/release.json")" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: draft
+    name: ${{ matrix.build.script }} on ${{ matrix.build.runner }}
+    runs-on: ${{ matrix.build.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        build: ${{ fromJSON(needs.draft.outputs.builds) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - uses: actions/setup-go@v5
+        if: hashFiles(format('{0}/runner/go.mod', inputs.engine)) != ''
+        with:
+          go-version-file: ${{ inputs.engine }}/runner/go.mod
+          cache-dependency-path: ${{ inputs.engine }}/runner/go.sum
+
+      - name: Build
+        shell: bash
+        env:
+          ENGINE: ${{ inputs.engine }}
+          SCRIPT: ${{ matrix.build.script }}
+        run: |
+          set -euo pipefail
+          case "$SCRIPT" in
+            *.ps1) pwsh -NoProfile -File "$ENGINE/$SCRIPT" ;;
+            *) bash "$ENGINE/$SCRIPT" ;;
+          esac
+          ls -l "$ENGINE/dist"
+
+      - name: Attach to the draft
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENGINE: ${{ inputs.engine }}
+          TAG: ${{ needs.draft.outputs.tag }}
+        run: gh release upload "$TAG" "$ENGINE"/dist/*.nstudio "$ENGINE"/dist/*.metadata.json --clobber
+
+  summary:
+    needs: [draft, build]
+    if: always() && needs.draft.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Next steps
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ needs.draft.outputs.tag }}
+          BUILD_RESULT: ${{ needs.build.result }}
+        run: |
+          set -euo pipefail
+          url=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json url --jq .url)
+          {
+            echo "## Draft release $TAG"
+            echo
+            echo "$url"
+            echo
+            gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
+              --jq '.assets[] | "- \(.name) (\(.size / 1048576 | floor) MB)"'
+            echo
+            if [ "$BUILD_RESULT" = "success" ]; then
+              echo "Install each .nstudio with Import in Narration Studio, then write the release notes and publish the draft."
+            else
+              echo "Some builds failed, so the draft is missing their files. Fix them and run the workflow again; it rebuilds the draft."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

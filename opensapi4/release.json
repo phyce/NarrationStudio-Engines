@@ -1,0 +1,8 @@
+{
+  "builds": [
+    {
+      "runner": "windows-latest",
+      "script": "build-windows-cpu.ps1"
+    }
+  ]
+}
