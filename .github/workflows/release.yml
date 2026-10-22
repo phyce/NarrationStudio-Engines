@@ -33,7 +33,7 @@ jobs:
       tag: ${{ steps.release.outputs.tag }}
       builds: ${{ steps.release.outputs.builds }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Create or reset the draft release
         id: release
@@ -78,13 +78,13 @@ jobs:
       matrix:
         build: ${{ fromJSON(needs.draft.outputs.builds) }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
 
-      - uses: actions/setup-go@v5
+      - uses: actions/setup-go@v7
         if: hashFiles(format('{0}/runner/go.mod', inputs.engine)) != ''
         with:
           go-version-file: ${{ inputs.engine }}/runner/go.mod

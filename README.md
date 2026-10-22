@@ -57,7 +57,9 @@ models/            # weights, voices, ...
    example here.
 2. **Write `manifest.json`.** Start from `kokoro/manifest.template.json`:
    - `id`: lowercase letters, digits and dashes. Profiles store voices as `<id>:<model>`, so keep
-     it once people use the pack. `name`, `version` (`1.0.0`) and `variant` (such as `cpu`).
+     it once people use the pack. `name`, `version` (the pack's own version, `1.0.0`),
+     `engineVersion` (optional: the version of the engine it wraps, shown as its version) and
+     `variant` (such as `cpu`).
    - `schemaVersion` and `protocol`: both `1`. `os` and `arch`: where it runs (`windows`, `amd64`).
    - `runtime`: `python` and `entrypoint` for a Python runner, or `executable` for a program of
      its own, plus `env` and `bootTimeoutSec`.

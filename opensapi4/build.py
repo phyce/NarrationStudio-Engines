@@ -38,7 +38,6 @@ DOWNLOADS = ROOT / "build" / "downloads"
 
 ENGINE_ID = "opensapi4"
 VARIANT = "cpu"
-VARIANT_DESCRIPTION = "Open Source Implementation of the Microsoft Speech API v4"
 
 OPENSAPI4_RELEASE = "v0.2.0"
 VOICES_ASSET = f"opensapi4-voices-{OPENSAPI4_RELEASE}.zip"
@@ -181,8 +180,8 @@ def build_manifest(args) -> dict:
     template["arch"] = args.arch
     if args.version:
         template["version"] = args.version
+    template["engineVersion"] = OPENSAPI4_RELEASE.removeprefix("v")
     template["variant"] = VARIANT
-    template["variantDescription"] = VARIANT_DESCRIPTION
     template["runtime"]["executable"] = runner_file_name(args.os)
     return template
 
