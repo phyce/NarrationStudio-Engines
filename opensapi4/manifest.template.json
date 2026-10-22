@@ -7,7 +7,8 @@
   "description": "Open Source Implementation of the Microsoft Speech API v4: Sam, Mike and Mary with their variants, along with TruVoice voices.",
   "type": "local",
   "tags": [
-    "cpu"
+    "cpu",
+    "fast"
   ],
   "os": "TO_BE_FILLED_BY_BUILD",
   "arch": "TO_BE_FILLED_BY_BUILD",
