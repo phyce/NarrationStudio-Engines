@@ -1,4 +1,216 @@
 {
   "schemaVersion": 1,
-  "packs": []
+  "packs": [
+    {
+      "manifest": {
+        "schemaVersion": 1,
+        "protocol": 1,
+        "id": "opensapi4",
+        "name": "OpenSAPI4",
+        "version": "1.0.0",
+        "description": "Open Source Implementation of the Microsoft Speech API v4: Sam, Mike and Mary with their variants, along with TruVoice voices.",
+        "type": "local",
+        "tags": [
+          "cpu"
+        ],
+        "os": "windows",
+        "arch": "amd64",
+        "approxInstallSizeMB": 16,
+        "runtime": {
+          "executable": "opensapi4-runner.exe",
+          "bootTimeoutSec": 30,
+          "env": {}
+        },
+        "models": [
+          {
+            "id": "opensapi4",
+            "name": "OpenSAPI4",
+            "voices": [
+              {
+                "id": "sam",
+                "name": "Sam",
+                "gender": "Male",
+                "sampleRate": 22050
+              },
+              {
+                "id": "mary",
+                "name": "Mary",
+                "gender": "Female",
+                "sampleRate": 22050
+              },
+              {
+                "id": "maryphone",
+                "name": "Mary (for Telephone)",
+                "gender": "Female",
+                "sampleRate": 8000
+              },
+              {
+                "id": "maryhall",
+                "name": "Mary in Hall",
+                "gender": "Female",
+                "sampleRate": 22050
+              },
+              {
+                "id": "marystadium",
+                "name": "Mary in Stadium",
+                "gender": "Female",
+                "sampleRate": 22050
+              },
+              {
+                "id": "maryspace",
+                "name": "Mary in Space",
+                "gender": "Female",
+                "sampleRate": 22050
+              },
+              {
+                "id": "mike",
+                "name": "Mike",
+                "gender": "Male",
+                "sampleRate": 22050
+              },
+              {
+                "id": "mikephone",
+                "name": "Mike (for Telephone)",
+                "gender": "Male",
+                "sampleRate": 8000
+              },
+              {
+                "id": "mikehall",
+                "name": "Mike in Hall",
+                "gender": "Male",
+                "sampleRate": 22050
+              },
+              {
+                "id": "mikestadium",
+                "name": "Mike in Stadium",
+                "gender": "Male",
+                "sampleRate": 22050
+              },
+              {
+                "id": "mikespace",
+                "name": "Mike in Space",
+                "gender": "Male",
+                "sampleRate": 22050
+              },
+              {
+                "id": "robo1",
+                "name": "RoboSoft One",
+                "gender": "Male",
+                "sampleRate": 22050
+              },
+              {
+                "id": "robo2",
+                "name": "RoboSoft Two",
+                "gender": "Male",
+                "sampleRate": 22050
+              },
+              {
+                "id": "robo3",
+                "name": "RoboSoft Three",
+                "gender": "Male",
+                "sampleRate": 22050
+              },
+              {
+                "id": "robo4",
+                "name": "RoboSoft Four",
+                "gender": "Female",
+                "sampleRate": 22050
+              },
+              {
+                "id": "robo5",
+                "name": "RoboSoft Five",
+                "gender": "Female",
+                "sampleRate": 22050
+              },
+              {
+                "id": "robo6",
+                "name": "RoboSoft Six",
+                "gender": "Female",
+                "sampleRate": 22050
+              },
+              {
+                "id": "whisperfemale",
+                "name": "Female Whisper",
+                "gender": "Female",
+                "sampleRate": 22050
+              },
+              {
+                "id": "whispermale",
+                "name": "Male Whisper",
+                "gender": "Male",
+                "sampleRate": 22050
+              },
+              {
+                "id": "trueman1",
+                "name": "Adult Male #1, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025
+              },
+              {
+                "id": "trueman2",
+                "name": "Adult Male #2, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025
+              },
+              {
+                "id": "trueman3",
+                "name": "Adult Male #3, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025
+              },
+              {
+                "id": "trueman4",
+                "name": "Adult Male #4, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025
+              },
+              {
+                "id": "trueman5",
+                "name": "Adult Male #5, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025
+              },
+              {
+                "id": "trueman6",
+                "name": "Adult Male #6, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025
+              },
+              {
+                "id": "trueman7",
+                "name": "Adult Male #7, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025
+              },
+              {
+                "id": "trueman8",
+                "name": "Adult Male #8, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025
+              },
+              {
+                "id": "truefemale1",
+                "name": "Adult Female #1, American English (TruVoice)",
+                "gender": "Female",
+                "sampleRate": 11025
+              },
+              {
+                "id": "truefemale2",
+                "name": "Adult Female #2, American English (TruVoice)",
+                "gender": "Female",
+                "sampleRate": 11025
+              }
+            ]
+          }
+        ],
+        "engineVersion": "0.2.0",
+        "variant": "cpu"
+      },
+      "url": "https://github.com/phyce/NarrationStudio-Engines/releases/download/opensapi4-v1.0.0/opensapi4-1.0.0-windows-amd64-cpu.nstudio",
+      "size": 10028962,
+      "sha256": "3bbb826c4d7495f9f95a55ed2ca0a369acbd782600f8b3b16e2007d64c9ceec6",
+      "notes": "",
+      "publishedAt": "2026-10-22T21:45:06Z"
+    }
+  ]
 }
