@@ -15,9 +15,13 @@ on:
         description: Engine
         type: choice
         options:
+          - emotivoice
+          - kittentts
           - kokoro
           - opensapi4
           - openvoice
+          - pockettts
+          - supertonic
 
 permissions:
   contents: write

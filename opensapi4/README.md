@@ -49,9 +49,9 @@ The voices don't all speak at the same rate: 22050 Hz, the telephone voices 8000
 format, and `op:load` checks every voice's rate against the voice data — a mismatch fails the
 install's test run instead of playing at the wrong speed.
 
-`synth` reads two optional `params`: `pitch` (Hz) and `speed` (words per minute), each clamped
-to the voice's range. Narration Studio doesn't send them yet. Texts are spoken tagged, so SAPI 4
-tags such as `\Pau=500\` work.
+`synth` reads three optional `params`: `pitch` and `speed`, percentages of the voice's own Hz and
+words per minute, clamped to its range, and `style` (`normal`, `whisper` or `monotone`). Narration
+Studio applies volume itself. Texts are spoken tagged, so SAPI 4 tags such as `\Pau=500\` work.
 
 ## Updating OpenSAPI4
 

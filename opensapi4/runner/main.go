@@ -28,9 +28,10 @@ type manifestModel struct {
 }
 
 type manifestVoice struct {
-	ID         string `json:"id"`
-	Name       string `json:"name"`
-	SampleRate int    `json:"sampleRate"`
+	ID         string                     `json:"id"`
+	Name       string                     `json:"name"`
+	SampleRate int                        `json:"sampleRate"`
+	Ranges     map[string]opensapi4.Range `json:"ranges"`
 }
 
 type request struct {
@@ -206,6 +207,9 @@ func (sapi4Runner *runner) load(incoming request) error {
 		if listedVoice.SampleRate != expectedSampleRate {
 			return failure("bad_bundle", "voice %s speaks at %d Hz, not the %d Hz its manifest gives", voice.ID, listedVoice.SampleRate, expectedSampleRate)
 		}
+		if voice.Ranges["pitch"] != listedVoice.Pitch || voice.Ranges["speed"] != listedVoice.Speed {
+			return failure("bad_bundle", "voice %s has pitch %+v and speed %+v, not the ranges its manifest gives", voice.ID, listedVoice.Pitch, listedVoice.Speed)
+		}
 	}
 	sapi4Runner.emit(event{ID: incoming.ID, Event: "done", SampleRate: modelSampleRate, Channels: 1, Bits: 16})
 	return nil
@@ -273,23 +277,28 @@ func (sapi4Runner *runner) synthesize(incoming request) error {
 	return nil
 }
 
+var styleTags = map[string]string{
+	"whisper":  `\Chr="Whisper"\`,
+	"monotone": `\Chr="Monotone"\`,
+}
+
 func applyVoiceSettings(speechRequest *opensapi4.Request, listedVoice opensapi4.Voice, params map[string]any) {
-	if pitch, given := positiveWholeNumber(params, "pitch"); given {
-		pitchInVoiceRange := min(max(pitch, listedVoice.Pitch.Minimum), listedVoice.Pitch.Maximum)
-		speechRequest.Pitch = &pitchInVoiceRange
+	if percent, given := params["pitch"].(float64); given {
+		pitch := relativeToVoice(listedVoice.Pitch, percent)
+		speechRequest.Pitch = &pitch
 	}
-	if speed, given := positiveWholeNumber(params, "speed"); given {
-		speedInVoiceRange := min(max(speed, listedVoice.Speed.Minimum), listedVoice.Speed.Maximum)
-		speechRequest.Speed = &speedInVoiceRange
+	if percent, given := params["speed"].(float64); given {
+		speed := relativeToVoice(listedVoice.Speed, percent)
+		speechRequest.Speed = &speed
+	}
+	if style, given := params["style"].(string); given {
+		speechRequest.Text = styleTags[style] + speechRequest.Text
 	}
 }
 
-func positiveWholeNumber(params map[string]any, name string) (int, bool) {
-	value, isNumber := params[name].(float64)
-	if !isNumber || value < 1 || value > math.MaxInt32 {
-		return 0, false
-	}
-	return int(math.Round(value)), true
+func relativeToVoice(voiceRange opensapi4.Range, percent float64) int {
+	value := math.Round(float64(voiceRange.Default) * percent / 100)
+	return int(min(max(value, float64(voiceRange.Minimum)), float64(voiceRange.Maximum)))
 }
 
 type audioSink struct {

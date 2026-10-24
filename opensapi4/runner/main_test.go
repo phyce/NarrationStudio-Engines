@@ -173,6 +173,19 @@ func TestVoicesAreFoundByName(t *testing.T) {
 	}
 }
 
+func TestPitchAndSpeedAreRelativeToTheVoice(t *testing.T) {
+	bundlePath, _ := testBundle(t)
+	finished := runRequests(t, bundlePath, request{
+		ID: "1", Op: "synth", Model: "opensapi4", Voice: "mary", Text: testText,
+		Params: map[string]any{"pitch": 120, "speed": 50},
+	})
+	pitch, speed := 203, 85
+	expected := expectedSpeech(t, opensapi4.Request{Voice: "Mary", Text: testText, Pitch: &pitch, Speed: &speed})
+	if !bytes.Equal(finished.audio, expected) {
+		t.Errorf("spoke %d bytes, want Mary at 203 Hz and 85 words per minute (%d bytes)", len(finished.audio), len(expected))
+	}
+}
+
 func TestPitchAndSpeedStayInTheVoicesRange(t *testing.T) {
 	bundlePath, _ := testBundle(t)
 	finished := runRequests(t, bundlePath, request{
@@ -183,6 +196,69 @@ func TestPitchAndSpeedStayInTheVoicesRange(t *testing.T) {
 	expected := expectedSpeech(t, opensapi4.Request{Voice: "Sam", Text: testText, Pitch: &highestPitch, Speed: &lowestSpeed})
 	if !bytes.Equal(finished.audio, expected) {
 		t.Errorf("spoke %d bytes, want Sam's highest pitch and lowest speed (%d bytes)", len(finished.audio), len(expected))
+	}
+}
+
+func TestStyleIsATag(t *testing.T) {
+	bundlePath, _ := testBundle(t)
+	finished := runRequests(t, bundlePath, request{
+		ID: "1", Op: "synth", Model: "opensapi4", Voice: "trueman1", Text: testText,
+		Params: map[string]any{"style": "whisper"},
+	})
+	expected := expectedSpeech(t, opensapi4.Request{
+		Voice: "Adult Male #1, American English (TruVoice)",
+		Text:  `\Chr="Whisper"\` + testText,
+	})
+	if !bytes.Equal(finished.audio, expected) {
+		t.Errorf("spoke %d bytes, want a whisper (%d bytes)", len(finished.audio), len(expected))
+	}
+}
+
+func TestEveryStyleChangesEveryKindOfVoice(t *testing.T) {
+	bundlePath, _ := testBundle(t)
+	for _, voice := range []string{"sam", "trueman1"} {
+		finished := runRequests(t, bundlePath,
+			request{ID: "normal", Op: "synth", Model: "opensapi4", Voice: voice, Text: testText, Params: map[string]any{"style": "normal"}},
+			request{ID: "whisper", Op: "synth", Model: "opensapi4", Voice: voice, Text: testText, Params: map[string]any{"style": "whisper"}},
+			request{ID: "monotone", Op: "synth", Model: "opensapi4", Voice: voice, Text: testText, Params: map[string]any{"style": "monotone"}},
+		)
+		spoken := map[string][]byte{}
+		audioOffset := 0
+		for _, style := range []string{"normal", "whisper", "monotone"} {
+			done := finished.eventFor(t, style)
+			spoken[style] = finished.audio[audioOffset : audioOffset+2*done.TotalSamples]
+			audioOffset += 2 * done.TotalSamples
+		}
+		if bytes.Equal(spoken["normal"], spoken["whisper"]) || bytes.Equal(spoken["normal"], spoken["monotone"]) || bytes.Equal(spoken["whisper"], spoken["monotone"]) {
+			t.Errorf("%s speaks two of its styles alike", voice)
+		}
+	}
+}
+
+func TestWrongVoiceRangesFailTheLoad(t *testing.T) {
+	bundlePath, packManifest := testBundle(t)
+	rawManifest, err := os.ReadFile(filepath.Join(bundlePath, "manifest.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var editedManifest map[string]any
+	if err := json.Unmarshal(rawManifest, &editedManifest); err != nil {
+		t.Fatal(err)
+	}
+	firstVoice := editedManifest["models"].([]any)[0].(map[string]any)["voices"].([]any)[0].(map[string]any)
+	firstVoice["ranges"].(map[string]any)["pitch"].(map[string]any)["default"] = 1
+	rawManifest, err = json.Marshal(editedManifest)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(bundlePath, "manifest.json"), rawManifest, 0o644); err != nil {
+		t.Fatal(err)
+	}
+
+	finished := runRequests(t, bundlePath, request{ID: "1", Op: "load", Model: "opensapi4"})
+	firstVoiceID := packManifest.Models[0].Voices[0].ID
+	if loaded := finished.eventFor(t, "1"); loaded.Event != "error" || loaded.Code != "bad_bundle" || !strings.Contains(loaded.Error, firstVoiceID) {
+		t.Errorf("load answered %+v, want a bad_bundle error about %s", loaded, firstVoiceID)
 	}
 }
 

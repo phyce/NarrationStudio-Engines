@@ -92,6 +92,8 @@ def manifest_problem(manifest, tag_id, tag_version, bundle_name):
         return f"{bundle_name}: manifest protocol must be a whole number, got {manifest['protocol']!r}"
     if not VERSION_PATTERN.match(str(manifest["version"])):
         return f"{bundle_name}: manifest version {manifest['version']!r} is not <major>.<minor>.<patch>"
+    if manifest.get("minAppVersion") and not VERSION_PATTERN.match(str(manifest["minAppVersion"])):
+        return f"{bundle_name}: manifest minAppVersion {manifest['minAppVersion']!r} is not <major>.<minor>.<patch>"
     if manifest["id"] != tag_id or manifest["version"] != tag_version:
         return (f"{bundle_name}: manifest says {manifest['id']} {manifest['version']}, "
                 f"but the tag says {tag_id} {tag_version}")
