@@ -5,6 +5,614 @@
       "manifest": {
         "schemaVersion": 1,
         "protocol": 1,
+        "minAppVersion": "0.18.0",
+        "id": "opensapi4",
+        "name": "OpenSAPI4",
+        "version": "1.0.1",
+        "description": "Open Source Implementation of the Microsoft Speech API v4: Sam, Mike and Mary with their variants, along with TruVoice voices.",
+        "links": {
+          "repository": "https://github.com/phyce/OpenSAPI4"
+        },
+        "type": "local",
+        "tags": [
+          "cpu",
+          "fast"
+        ],
+        "os": "windows",
+        "arch": "amd64",
+        "approxInstallSizeMB": 16,
+        "runtime": {
+          "executable": "opensapi4-runner.exe",
+          "bootTimeoutSec": 30,
+          "env": {}
+        },
+        "models": [
+          {
+            "id": "opensapi4",
+            "name": "OpenSAPI4",
+            "voices": [
+              {
+                "id": "sam",
+                "name": "Sam",
+                "gender": "Male",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 100,
+                    "minimum": 50,
+                    "maximum": 200
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 30,
+                    "maximum": 450
+                  }
+                }
+              },
+              {
+                "id": "mary",
+                "name": "Mary",
+                "gender": "Female",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 169,
+                    "minimum": 84,
+                    "maximum": 338
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "maryphone",
+                "name": "Mary (for Telephone)",
+                "gender": "Female",
+                "sampleRate": 8000,
+                "ranges": {
+                  "pitch": {
+                    "default": 169,
+                    "minimum": 84,
+                    "maximum": 338
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "maryhall",
+                "name": "Mary in Hall",
+                "gender": "Female",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 169,
+                    "minimum": 84,
+                    "maximum": 338
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "marystadium",
+                "name": "Mary in Stadium",
+                "gender": "Female",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 169,
+                    "minimum": 84,
+                    "maximum": 338
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "maryspace",
+                "name": "Mary in Space",
+                "gender": "Female",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 169,
+                    "minimum": 84,
+                    "maximum": 338
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "mike",
+                "name": "Mike",
+                "gender": "Male",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 113,
+                    "minimum": 56,
+                    "maximum": 226
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "mikephone",
+                "name": "Mike (for Telephone)",
+                "gender": "Male",
+                "sampleRate": 8000,
+                "ranges": {
+                  "pitch": {
+                    "default": 113,
+                    "minimum": 56,
+                    "maximum": 226
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "mikehall",
+                "name": "Mike in Hall",
+                "gender": "Male",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 113,
+                    "minimum": 56,
+                    "maximum": 226
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "mikestadium",
+                "name": "Mike in Stadium",
+                "gender": "Male",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 113,
+                    "minimum": 56,
+                    "maximum": 226
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "mikespace",
+                "name": "Mike in Space",
+                "gender": "Male",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 113,
+                    "minimum": 56,
+                    "maximum": 226
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "robo1",
+                "name": "RoboSoft One",
+                "gender": "Male",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 75,
+                    "minimum": 37,
+                    "maximum": 150
+                  },
+                  "speed": {
+                    "default": 130,
+                    "minimum": 30,
+                    "maximum": 390
+                  }
+                }
+              },
+              {
+                "id": "robo2",
+                "name": "RoboSoft Two",
+                "gender": "Male",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 120,
+                    "minimum": 60,
+                    "maximum": 240
+                  },
+                  "speed": {
+                    "default": 130,
+                    "minimum": 30,
+                    "maximum": 390
+                  }
+                }
+              },
+              {
+                "id": "robo3",
+                "name": "RoboSoft Three",
+                "gender": "Male",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 113,
+                    "minimum": 56,
+                    "maximum": 226
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "robo4",
+                "name": "RoboSoft Four",
+                "gender": "Female",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 169,
+                    "minimum": 84,
+                    "maximum": 338
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "robo5",
+                "name": "RoboSoft Five",
+                "gender": "Female",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 120,
+                    "minimum": 60,
+                    "maximum": 240
+                  },
+                  "speed": {
+                    "default": 130,
+                    "minimum": 30,
+                    "maximum": 390
+                  }
+                }
+              },
+              {
+                "id": "robo6",
+                "name": "RoboSoft Six",
+                "gender": "Female",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 100,
+                    "minimum": 50,
+                    "maximum": 200
+                  },
+                  "speed": {
+                    "default": 130,
+                    "minimum": 30,
+                    "maximum": 390
+                  }
+                }
+              },
+              {
+                "id": "whisperfemale",
+                "name": "Female Whisper",
+                "gender": "Female",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 169,
+                    "minimum": 84,
+                    "maximum": 338
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "whispermale",
+                "name": "Male Whisper",
+                "gender": "Male",
+                "sampleRate": 22050,
+                "ranges": {
+                  "pitch": {
+                    "default": 113,
+                    "minimum": 56,
+                    "maximum": 226
+                  },
+                  "speed": {
+                    "default": 170,
+                    "minimum": 30,
+                    "maximum": 510
+                  }
+                }
+              },
+              {
+                "id": "trueman1",
+                "name": "Adult Male #1, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 85,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              },
+              {
+                "id": "trueman2",
+                "name": "Adult Male #2, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 50,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              },
+              {
+                "id": "trueman3",
+                "name": "Adult Male #3, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 125,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              },
+              {
+                "id": "trueman4",
+                "name": "Adult Male #4, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 73,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              },
+              {
+                "id": "trueman5",
+                "name": "Adult Male #5, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 129,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              },
+              {
+                "id": "trueman6",
+                "name": "Adult Male #6, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 89,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 120,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              },
+              {
+                "id": "trueman7",
+                "name": "Adult Male #7, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 117,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              },
+              {
+                "id": "trueman8",
+                "name": "Adult Male #8, American English (TruVoice)",
+                "gender": "Male",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 203,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              },
+              {
+                "id": "truefemale1",
+                "name": "Adult Female #1, American English (TruVoice)",
+                "gender": "Female",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 208,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              },
+              {
+                "id": "truefemale2",
+                "name": "Adult Female #2, American English (TruVoice)",
+                "gender": "Female",
+                "sampleRate": 11025,
+                "ranges": {
+                  "pitch": {
+                    "default": 152,
+                    "minimum": 50,
+                    "maximum": 400
+                  },
+                  "speed": {
+                    "default": 150,
+                    "minimum": 50,
+                    "maximum": 250
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "settings": [
+          {
+            "id": "pitch",
+            "name": "Pitch",
+            "type": "number",
+            "minimum": 50,
+            "maximum": 200,
+            "step": 1,
+            "default": 100,
+            "unit": "%",
+            "voiceUnit": "Hz"
+          },
+          {
+            "id": "speed",
+            "name": "Speed",
+            "type": "number",
+            "minimum": 25,
+            "maximum": 300,
+            "step": 1,
+            "default": 100,
+            "unit": "%",
+            "voiceUnit": "wpm"
+          },
+          {
+            "id": "style",
+            "name": "Style",
+            "type": "choice",
+            "default": "normal",
+            "choices": [
+              {
+                "value": "normal",
+                "name": "Normal"
+              },
+              {
+                "value": "whisper",
+                "name": "Whisper"
+              },
+              {
+                "value": "monotone",
+                "name": "Monotone"
+              }
+            ]
+          }
+        ],
+        "engineVersion": "0.2.0",
+        "variant": "cpu"
+      },
+      "url": "https://github.com/phyce/NarrationStudio-Engines/releases/download/opensapi4-v1.0.1/opensapi4-1.0.1-windows-amd64-cpu.nstudio",
+      "size": 10030342,
+      "sha256": "c6e1d77dcc6754e83420b7bf003356a5142bc28ede27f9ed2f85a94fa9e9856e",
+      "notes": "",
+      "publishedAt": "2026-10-24T14:46:20Z"
+    },
+    {
+      "manifest": {
+        "schemaVersion": 1,
+        "protocol": 1,
         "id": "opensapi4",
         "name": "OpenSAPI4",
         "version": "1.0.0",
